@@ -36,18 +36,19 @@ class HomeController extends GetxController {
   bool isFemaleExecutive = false;
 
   //functions
-  setRole() async {
+  Future<void> setRole() async {
     role = (await SharedService().getSharedRole())!;
     isFemaleExecutive = (role == 'femaleExecutive');
     update();
   }
 
-  void sendOTP(String mobile, BuildContext context) async {
+  void sendOTP(String mobile, BuildContext context, Status status,
+      String orderId) async {
     isLoading.value = true;
     await _auth.verifyPhoneNumber(
       phoneNumber: '+91' + mobile,
       verificationCompleted: (phoneAuthCredential) {
-        pickUp(phoneAuthCredential, context);
+        pickUp(phoneAuthCredential, context, status, orderId);
       },
       verificationFailed: (error) {
         isLoading.value = false;
@@ -58,22 +59,27 @@ class HomeController extends GetxController {
         isLoading.value = false;
         _verificationId = verificationId;
         showSnackBar(context, 'Code sent SuccessFully');
-        Get.to(() => VerifyOtpView());
+        Get.to(() => VerifyOtpView(
+              status: status,
+              order: orderId,
+            ));
       },
       codeAutoRetrievalTimeout: (verificationId) {},
     );
   }
 
-  void verifyOTP(String otp, BuildContext context) async {
+  void verifyOTP(
+      String otp, BuildContext context, Status status, String orderId) async {
     isLoading.value = true;
     PhoneAuthCredential credential = PhoneAuthProvider.credential(
       verificationId: _verificationId!,
       smsCode: otp,
     );
-    pickUp(credential, context);
+    pickUp(credential, context, status, orderId);
   }
 
-  void pickUp(PhoneAuthCredential credential, BuildContext context) async {
+  void pickUp(PhoneAuthCredential credential, BuildContext context,
+      Status status, String orderId) async {
     try {
       UserCredential userCredential =
           await _auth.signInWithCredential(credential);
@@ -83,6 +89,7 @@ class HomeController extends GetxController {
           Get.toNamed(Routes.MEASUREMENT);
         } else {
           isLoading.value = false;
+          await _fireStoreMethods.updateOrderStatus(orderId, status);
           Get.offAllNamed(Routes.BOTTOM_NAVIGATION);
         }
       }
@@ -93,10 +100,20 @@ class HomeController extends GetxController {
     }
   }
 
+  void rejectOrder(String orderID) async {
+    isLoading.value = true;
+    await _fireStoreMethods.declineOrder(orderID);
+    isLoading.value = false;
+  }
+
+  void getAllorders() async {
+    await setRole();
+    _orders.bindStream(_fireStoreMethods.getAllOrders(isFemaleExecutive));
+  }
+
   @override
   void onInit() {
-    _orders.bindStream(_fireStoreMethods.getAllOrders());
-    setRole();
+    getAllorders();
     super.onInit();
   }
 

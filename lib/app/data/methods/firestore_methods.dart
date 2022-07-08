@@ -16,7 +16,7 @@ class FireStoreMethods {
 
     try {
       var result = await _firebaseFirestore
-          .collection('LogisticUsers')
+          .collection('LogisticUsers') // Tailors
           .doc(user.uid)
           .get();
       if (result.exists) {
@@ -46,15 +46,122 @@ class FireStoreMethods {
     }
   }
 
-  Stream<List<OrderModel>> getAllOrders() {
-    return _firebaseFirestore.collection('orders').snapshots().map((querySnap) {
-      List<OrderModel> _orders = [];
+  Future<void> updateName(String name) async {
+    try {
+      await _firebaseFirestore
+          .collection('LogisticUsers')
+          .doc(_authMethods.currentUser!.uid)
+          .update(
+        {'name': name},
+      );
+    } on FirebaseException catch (e) {
+      log(e.message!);
+      return null;
+    }
+  }
 
-      querySnap.docs.forEach((element) {
-        _orders.add(OrderModel.fromSnapShot(element));
+  Future<void> updateAvailability(List<Availability> avail) async {
+    try {
+      await _firebaseFirestore
+          .collection('LogisticUsers')
+          .doc(_authMethods.currentUser!.uid)
+          .update(
+        {'availability': avail.map((e) => e.toMap()).toList()},
+      );
+    } on FirebaseException catch (e) {
+      log(e.message!);
+      return null;
+    }
+  }
+
+  Future<void> updateOrderStatus(String orderId, Status status) async {
+    var ref = await _firebaseFirestore
+        .collection('orders')
+        .where('orderID', isEqualTo: orderId);
+
+    var snap = await ref.get();
+    OrderModel order = OrderModel.fromSnapShot(snap.docs[0]);
+    order.orderStatus = status;
+
+    await _firebaseFirestore
+        .collection('orders')
+        .doc(snap.docs[0].reference.id)
+        .update(
+          order.toMap(),
+        );
+  }
+
+  Future<void> declineOrder(String orderId) async {
+    var ref = await _firebaseFirestore
+        .collection('orders')
+        .where('orderID', isEqualTo: orderId);
+
+    var snap = await ref.get();
+    OrderModel order = OrderModel.fromSnapShot(snap.docs[0]);
+
+    order.rejectionsId.add(_authMethods.currentUser!.uid);
+
+    await _firebaseFirestore
+        .collection('orders')
+        .doc(snap.docs[0].reference.id)
+        .update(
+          order.toMap(),
+        );
+  }
+
+  Stream<List<OrderModel>> getAllOrders(bool isFemale) {
+    if (isFemale) {
+      return _firebaseFirestore
+          .collection('orders')
+          .where('measurements', isNull: true)
+          .snapshots()
+          .map((querySnap) {
+        List<OrderModel> _orders = [];
+
+        querySnap.docs.forEach((element) {
+          var temp = OrderModel.fromSnapShot(element);
+          log(temp.rejectionsId.length.toString());
+          if (temp.rejectionsId.contains(_authMethods.currentUser!.uid)) {
+            log(_authMethods.currentUser!.uid);
+            return;
+          } else {
+            _orders.add(temp);
+          }
+        });
+
+        return _orders;
       });
+    } else {
+      return _firebaseFirestore
+          .collection('orders')
+          .where(
+            'orderStatus',
+            whereIn: [
+              Status.accepted.name,
+              Status.ready.name,
+            ],
+          )
+          .snapshots()
+          .map((querySnap) {
+            List<OrderModel> _orders = [];
 
-      return _orders;
-    });
+            querySnap.docs.forEach((element) {
+              var temp = OrderModel.fromSnapShot(element);
+              if (temp.rejectionsId.contains(_authMethods.currentUser!.uid)) {
+                return;
+              } else {
+                _orders.add(temp);
+              }
+            });
+
+            return _orders;
+          });
+    }
+  }
+
+  Future<void> addDummyOrders(OrderModel model) async {
+    await _firebaseFirestore.collection('orders').doc().set(
+          model.toMap(),
+        );
   }
 }

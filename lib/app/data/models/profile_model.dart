@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfileModel {
@@ -51,6 +52,22 @@ class ProfileModel {
       'role': role,
       'availability': availability!.map((x) => x.toMap()).toList(),
     };
+  }
+
+  ProfileModel copyWith({
+    String? name,
+    String? phone,
+    String? role,
+    String? profileUrl,
+    List<Availability>? availability,
+  }) {
+    return ProfileModel(
+      name: name ?? this.name,
+      phone: phone ?? this.phone,
+      role: role ?? this.role,
+      profileUrl: profileUrl ?? this.profileUrl,
+      availability: availability ?? this.availability,
+    );
   }
 }
 

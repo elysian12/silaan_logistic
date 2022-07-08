@@ -6,6 +6,7 @@ class LoginHelper {
 
   //Text
   static const String welcome = 'Welcome to Silaan!';
+  static const String logistic = 'Logistic App';
   static const String login = 'Login';
   static const String getOtp = 'Get OTP';
   static const String enterMobile = 'Enter Mobile Number';

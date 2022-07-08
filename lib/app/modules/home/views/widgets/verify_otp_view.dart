@@ -10,10 +10,14 @@ import 'package:silaan_logistic/app/common/widgets/filled_cutom_button.dart';
 import 'package:silaan_logistic/app/common/widgets/loading_overlay.dart';
 import 'package:silaan_logistic/app/modules/helper.dart';
 import 'package:silaan_logistic/app/modules/home/controllers/home_controller.dart';
+import 'package:silaan_logistic/app/modules/home/models/order_model.dart';
 import 'package:silaan_logistic/app/modules/login/views/helper.dart';
 
 class VerifyOtpView extends GetView<HomeController> {
-  const VerifyOtpView({Key? key}) : super(key: key);
+  final Status status;
+  final String order;
+  const VerifyOtpView({Key? key, required this.status, required this.order})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +79,8 @@ class VerifyOtpView extends GetView<HomeController> {
                 FullFilledCustomButton(
                   label: HomeHelper.confirm,
                   onTap: () {
-                    controller.verifyOTP(controller.otpCode, context);
+                    controller.verifyOTP(
+                        controller.otpCode, context, status, order);
                   },
                 ),
                 Spacer(

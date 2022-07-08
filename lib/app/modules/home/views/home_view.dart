@@ -5,6 +5,7 @@ import 'package:silaan_logistic/app/common/constants/colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:silaan_logistic/app/common/widgets/loading_overlay.dart';
 import 'package:silaan_logistic/app/modules/helper.dart';
+import 'package:silaan_logistic/app/modules/home/models/order_model.dart';
 import 'package:silaan_logistic/app/modules/home/views/order_view.dart';
 
 import '../../../common/widgets/filled_cutom_button.dart';
@@ -62,13 +63,28 @@ class HomeView extends GetView<HomeController> {
                               child: OrderCard(
                                 imgUrl: item.imgUrl!,
                                 orderID: item.orderID!,
-                                productName: item.productName!,
-                                status: item.status!.name,
+                                productName: item.typeOfCloth!,
+                                status: item.orderStatus!.name,
                                 accept: () {
-                                  controller.sendOTP(
-                                      item.contactNumber!, context);
+                                  if (item.orderStatus! == Status.accepted) {
+                                    controller.sendOTP(
+                                      item.contactNumber!,
+                                      context,
+                                      Status.processing,
+                                      item.orderID!,
+                                    );
+                                  } else {
+                                    controller.sendOTP(
+                                      item.contactNumber!,
+                                      context,
+                                      Status.delivered,
+                                      item.orderID!,
+                                    );
+                                  }
                                 },
-                                reject: () {},
+                                reject: () {
+                                  controller.rejectOrder(item.orderID!);
+                                },
                               ),
                             ),
                           );
@@ -96,13 +112,28 @@ class HomeView extends GetView<HomeController> {
                               child: OrderCard(
                                 imgUrl: item.imgUrl!,
                                 orderID: item.orderID!,
-                                productName: item.productName!,
-                                status: item.status!.name,
+                                productName: item.typeOfCloth!,
+                                status: item.orderStatus!.name,
                                 accept: () {
-                                  controller.sendOTP(
-                                      item.contactNumber!, context);
+                                  if (item.orderStatus! == Status.accepted) {
+                                    controller.sendOTP(
+                                      item.contactNumber!,
+                                      context,
+                                      Status.processing,
+                                      item.orderID!,
+                                    );
+                                  } else {
+                                    controller.sendOTP(
+                                      item.contactNumber!,
+                                      context,
+                                      Status.delivered,
+                                      item.orderID!,
+                                    );
+                                  }
                                 },
-                                reject: () {},
+                                reject: () {
+                                  controller.rejectOrder(item.orderID!);
+                                },
                               ),
                             ),
                           );
@@ -166,13 +197,28 @@ class HomeView extends GetView<HomeController> {
                               child: OrderCard(
                                 imgUrl: item.imgUrl!,
                                 orderID: item.orderID!,
-                                productName: item.productName!,
-                                status: item.status!.name,
+                                productName: item.typeOfCloth!,
+                                status: item.orderStatus!.name,
                                 accept: () {
-                                  controller.sendOTP(
-                                      item.contactNumber!, context);
+                                  if (item.orderStatus! == Status.accepted) {
+                                    controller.sendOTP(
+                                      item.contactNumber!,
+                                      context,
+                                      Status.processing,
+                                      item.orderID!,
+                                    );
+                                  } else {
+                                    controller.sendOTP(
+                                      item.contactNumber!,
+                                      context,
+                                      Status.delivered,
+                                      item.orderID!,
+                                    );
+                                  }
                                 },
-                                reject: () {},
+                                reject: () {
+                                  controller.rejectOrder(item.orderID!);
+                                },
                               ),
                             ),
                           );
@@ -200,13 +246,28 @@ class HomeView extends GetView<HomeController> {
                               child: OrderCard(
                                 imgUrl: item.imgUrl!,
                                 orderID: item.orderID!,
-                                productName: item.productName!,
-                                status: item.status!.name,
+                                productName: item.typeOfCloth!,
+                                status: item.orderStatus!.name,
                                 accept: () {
-                                  controller.sendOTP(
-                                      item.contactNumber!, context);
+                                  if (item.orderStatus! == Status.accepted) {
+                                    controller.sendOTP(
+                                      item.contactNumber!,
+                                      context,
+                                      Status.processing,
+                                      item.orderID!,
+                                    );
+                                  } else {
+                                    controller.sendOTP(
+                                      item.contactNumber!,
+                                      context,
+                                      Status.delivered,
+                                      item.orderID!,
+                                    );
+                                  }
                                 },
-                                reject: () {},
+                                reject: () {
+                                  controller.rejectOrder(item.orderID!);
+                                },
                               ),
                             ),
                           );
@@ -235,13 +296,28 @@ class HomeView extends GetView<HomeController> {
                               child: OrderCard(
                                 imgUrl: item.imgUrl!,
                                 orderID: item.orderID!,
-                                productName: item.productName!,
-                                status: item.status!.name,
+                                productName: item.typeOfCloth!,
+                                status: item.orderStatus!.name,
                                 accept: () {
-                                  controller.sendOTP(
-                                      item.contactNumber!, context);
+                                  if (item.orderStatus! == Status.accepted) {
+                                    controller.sendOTP(
+                                      item.contactNumber!,
+                                      context,
+                                      Status.processing,
+                                      item.orderID!,
+                                    );
+                                  } else {
+                                    controller.sendOTP(
+                                      item.contactNumber!,
+                                      context,
+                                      Status.delivered,
+                                      item.orderID!,
+                                    );
+                                  }
                                 },
-                                reject: () {},
+                                reject: () {
+                                  controller.rejectOrder(item.orderID!);
+                                },
                               ),
                             ),
                           );

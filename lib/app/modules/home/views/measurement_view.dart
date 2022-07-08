@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:silaan_logistic/app/common/constants/colors.dart';
+import 'package:silaan_logistic/app/common/constants/text_style.dart';
 import 'package:silaan_logistic/app/modules/helper.dart';
 import 'package:silaan_logistic/app/modules/profile/views/profile_view.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,7 +13,12 @@ class MeasurementView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(
+          'Measurements',
+          style: MyTextStyle.appBarTextStyle,
+        ),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -33,15 +40,23 @@ class MeasurementView extends StatelessWidget {
               SizedBox(
                 height: 40.h,
               ),
-              OutlinedButton(
-                onPressed: () {
-                  Get.offAllNamed(Routes.BOTTOM_NAVIGATION);
-                },
-                child: Text(
-                  'Next',
-                  style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+              InkWell(
+                onTap: () => Get.offAllNamed(Routes.BOTTOM_NAVIGATION),
+                child: Container(
+                  width: Get.width,
+                  height: 40.h,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: AppColors.iconColor,
+                    border:
+                        Border.all(color: AppColors.fontColor.withOpacity(0.5)),
+                  ),
+                  child: Text(
+                    'Next',
+                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
                 ),
               ),
             ],

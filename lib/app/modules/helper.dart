@@ -231,7 +231,7 @@ Needless to say, not all designs could be flawless or you might want to alter so
   //order view
   static const String orderDetails = 'Order Details';
   static const String descripition = 'Description : ';
-  static const String payment = 'Payment Status : ';
+  static const String payment = 'Order Status : ';
   static const String amount = 'Amount : ';
   static const String pickUpDate = 'Pick Up Date : ';
   static const String deliveryDate = 'Delivery Date : ';
@@ -239,6 +239,8 @@ Needless to say, not all designs could be flawless or you might want to alter so
   static const String remark = 'Remark : ';
   static const String contactNumber = 'Contact Number :  ';
   static const String pickup = 'Pick Up';
+  static const String drop = 'Drop';
+  // static const String pickup = 'Pick Up';
   static const String confirm = 'Confirm';
   static const String pickreq = 'PickUp Request Send enter OTP';
   static const String otp = 'OTP';

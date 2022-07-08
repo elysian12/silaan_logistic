@@ -87,7 +87,7 @@ class OrderView extends GetView<HomeController> {
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: order.decripition!.split(',').map((e) {
+                      children: order.descripition!.split(',').map((e) {
                         return Text(e);
                       }).toList(),
                     )
@@ -107,7 +107,7 @@ class OrderView extends GetView<HomeController> {
                           ),
                     ),
                     Text(
-                      order.status!.name,
+                      order.orderStatus!.name,
                       style: Theme.of(context).textTheme.bodyText1!.copyWith(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w500,
@@ -199,7 +199,7 @@ class OrderView extends GetView<HomeController> {
                           ),
                     ),
                     ChipButtons(
-                      label: order.contactNumber!,
+                      label: 'Call Now',
                       onTap: () {},
                     )
                   ],
@@ -210,7 +210,21 @@ class OrderView extends GetView<HomeController> {
                 InkWell(
                   onTap: () {
                     final homeController = Get.find<HomeController>();
-                    homeController.sendOTP(order.contactNumber!, context);
+                    if (order.orderStatus == Status.accepted) {
+                      homeController.sendOTP(
+                        order.contactNumber!,
+                        context,
+                        Status.processing,
+                        order.orderID!,
+                      );
+                    } else {
+                      homeController.sendOTP(
+                        order.contactNumber!,
+                        context,
+                        Status.delivered,
+                        order.orderID!,
+                      );
+                    }
                   },
                   child: Container(
                     height: 35.h,
@@ -221,7 +235,9 @@ class OrderView extends GetView<HomeController> {
                     ),
                     child: Center(
                       child: Text(
-                        HomeHelper.pickup,
+                        order.orderStatus == Status.accepted
+                            ? HomeHelper.pickup
+                            : HomeHelper.drop,
                         style: MyTextStyle.appBarTextStyle
                             .copyWith(height: 21.65.sp / 18),
                       ),

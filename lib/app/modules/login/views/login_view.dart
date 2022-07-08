@@ -34,6 +34,15 @@ class LoginView extends GetView<LoginController> {
                 height: 21.h,
               ),
               Text(
+                LoginHelper.logistic,
+                style: MyTextStyle.onBoardTitleTextStyle.copyWith(
+                  fontSize: 20.sp,
+                ),
+              ),
+              SizedBox(
+                height: 21.h,
+              ),
+              Text(
                 LoginHelper.welcome,
                 style: MyTextStyle.onBoardTitleTextStyle.copyWith(
                   fontSize: 28.sp,
