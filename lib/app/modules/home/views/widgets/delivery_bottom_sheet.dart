@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import 'package:silaan_logistic/app/common/constants/colors.dart';
 import 'package:silaan_logistic/app/modules/helper.dart';
+import 'package:silaan_logistic/app/modules/home/controllers/home_controller.dart';
 
 class DeliveryBottomSheet extends StatelessWidget {
   const DeliveryBottomSheet({
@@ -22,7 +23,7 @@ class DeliveryBottomSheet extends StatelessWidget {
           return InkWell(
             onTap: () {
               Get.back();
-              // Get.to(() => OtpView());
+              final homeController = Get.find<HomeController>();
             },
             child: Column(
               children: [

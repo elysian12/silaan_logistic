@@ -56,7 +56,7 @@ class ProfileController extends GetxController {
   void cropProfilePic(File profile) async {
     CroppedFile? croppedFile = await ImageCropper().cropImage(
       sourcePath: profile.path,
-      compressQuality: 20,
+      compressQuality: 10,
       aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
     );
     if (croppedFile != null) {
@@ -114,11 +114,10 @@ class ProfileController extends GetxController {
   }
 
   void logOut() async {
-    _authMethods.signOut();
+    await _authMethods.signOut();
     await SharedService().removeSharedServices();
     Get.offAllNamed(Routes.LOGIN);
     Get.delete<ProfileController>();
-    Get.delete<HomeController>();
   }
 
   @override

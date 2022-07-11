@@ -105,6 +105,24 @@ class FireStoreMethods {
         );
   }
 
+  Future<void> updateOrderMeasurements(
+      String orderId, Measurements measurements) async {
+    var ref = await _firebaseFirestore
+        .collection('orders')
+        .where('orderID', isEqualTo: orderId);
+
+    var snap = await ref.get();
+    OrderModel order = OrderModel.fromSnapShot(snap.docs[0]);
+    order.measurements = measurements;
+
+    await _firebaseFirestore
+        .collection('orders')
+        .doc(snap.docs[0].reference.id)
+        .update(
+          order.toMap(),
+        );
+  }
+
   Future<void> declineOrder(String orderId) async {
     var ref = await _firebaseFirestore
         .collection('orders')

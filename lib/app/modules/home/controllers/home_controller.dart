@@ -86,7 +86,7 @@ class HomeController extends GetxController {
       if (userCredential.user != null) {
         if (role == 'femaleExecutive') {
           isLoading.value = false;
-          Get.toNamed(Routes.MEASUREMENT);
+          Get.toNamed(Routes.MEASUREMENT, arguments: orderId);
         } else {
           isLoading.value = false;
           await _fireStoreMethods.updateOrderStatus(orderId, status);
@@ -104,6 +104,11 @@ class HomeController extends GetxController {
     isLoading.value = true;
     await _fireStoreMethods.declineOrder(orderID);
     isLoading.value = false;
+  }
+
+  Future<void> updateMeasurement(
+      String orderId, Measurements measurements) async {
+    await _fireStoreMethods.updateOrderMeasurements(orderId, measurements);
   }
 
   void getAllorders() async {

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -280,11 +278,13 @@ class EditContainer extends StatefulWidget {
   final String label;
   final String value;
   final bool isProfile;
+  final Function(String)? onSubmitted;
   const EditContainer({
     Key? key,
     required this.label,
     required this.value,
     this.isProfile = true,
+    this.onSubmitted,
   }) : super(key: key);
 
   @override
@@ -350,16 +350,17 @@ class _EditContainerState extends State<EditContainer> {
             active
                 ? TextFormField(
                     controller: controller,
-                    onFieldSubmitted: (value) {
-                      if (widget.isProfile) {
-                        setState(() {
-                          var profileController = Get.find<ProfileController>();
-                          profileController.profileModel.name = value;
-                          profileController.updateName(value);
-                          active = !active;
-                        });
-                      } else {}
-                    },
+                    onFieldSubmitted: widget.isProfile
+                        ? (value) {
+                            setState(() {
+                              var profileController =
+                                  Get.find<ProfileController>();
+                              profileController.profileModel.name = value;
+                              profileController.updateName(value);
+                              active = !active;
+                            });
+                          }
+                        : widget.onSubmitted,
                   )
                 : Text(
                     widget.value,
