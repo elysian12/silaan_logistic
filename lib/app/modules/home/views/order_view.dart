@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:silaan_logistic/app/common/constants/colors.dart';
 import 'package:silaan_logistic/app/common/constants/text_style.dart';
@@ -10,7 +11,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:silaan_logistic/app/modules/home/controllers/home_controller.dart';
 
 import 'package:silaan_logistic/app/modules/home/models/order_model.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 class OrderView extends GetView<HomeController> {
   final OrderModel order;
@@ -163,17 +163,18 @@ class OrderView extends GetView<HomeController> {
                   height: 139.h,
                   width: 281.w,
                   // color: AppColors.textBorder,
-                  child: WebView(
-                    javascriptMode: JavascriptMode.unrestricted,
-                    zoomEnabled: true,
-                    onWebViewCreated: (controller) {
-                      controller.runJavascript(
-                          "document.getElementById('omnibox').style.display = \"none\"");
+                  child: GoogleMap(
+                    markers: {
+                      Marker(
+                        markerId: MarkerId('loc'),
+                        position: LatLng(22.3072, 73.1812),
+                      )
                     },
-                    userAgent:
-                        'Version/4.0 Chrome/43.0.2357.65 Mobile Safari/537.36',
-                    initialUrl:
-                        "https://www.google.com/maps/?pb=!1m18!1m12!1m3!1d118106.71283250827!2d73.10304567004724!3d22.322087608604043!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395fc8ab91a3ddab%3A0xac39d3bfe1473fb8!2sVadodara%2C%20Gujarat!5e0!3m2!1sen!2sin!4v1656657999154!5m2!1sen!2sin",
+                    initialCameraPosition: CameraPosition(
+                      target: LatLng(22.3072, 73.1812),
+                      zoom: 14.4746,
+                    ),
+                    onMapCreated: (controller) {},
                   ),
                 ),
                 SizedBox(

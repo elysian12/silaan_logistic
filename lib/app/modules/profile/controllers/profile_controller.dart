@@ -1,21 +1,27 @@
-import 'dart:developer';
+import 'dart:io';
 
 import 'package:get/get.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:silaan_logistic/app/data/methods/firebase_auth_methods.dart';
+import 'package:silaan_logistic/app/data/methods/firebase_storage_methods.dart';
 import 'package:silaan_logistic/app/data/methods/firestore_methods.dart';
 import 'package:silaan_logistic/app/data/models/profile_model.dart';
 import 'package:silaan_logistic/app/data/services/shared_services.dart';
 import 'package:silaan_logistic/app/modules/home/controllers/home_controller.dart';
-import 'package:silaan_logistic/app/modules/report/controllers/report_controller.dart';
 import 'package:silaan_logistic/app/routes/app_pages.dart';
 
 class ProfileController extends GetxController {
+  //  Intial
+  File? file;
+
   //models
   ProfileModel profileModel = ProfileModel();
 
   //methods
   FireStoreMethods _fireStoreMethods = FireStoreMethods();
   FirebaseAuthMethods _authMethods = FirebaseAuthMethods();
+  FireStorageMethods _methods = FireStorageMethods();
 
   //state
   RxBool isLoading = false.obs;
@@ -34,6 +40,32 @@ class ProfileController extends GetxController {
   ];
 
   //functions
+
+  void updateProfile() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      cropProfilePic(File(pickedFile.path));
+      var imgUrl = await _methods.uploadProfilePhoto(
+          File(pickedFile.path), _authMethods.currentUser!.uid);
+      _fireStoreMethods.updateProfile(imgUrl!);
+    }
+  }
+
+  void cropProfilePic(File profile) async {
+    CroppedFile? croppedFile = await ImageCropper().cropImage(
+      sourcePath: profile.path,
+      compressQuality: 20,
+      aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
+    );
+    if (croppedFile != null) {
+      file = File(croppedFile.path);
+      getProfile();
+    }
+    update();
+  }
+
   void getProfile() async {
     isLoading.value = true;
 

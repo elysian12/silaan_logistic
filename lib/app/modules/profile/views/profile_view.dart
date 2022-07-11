@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -28,11 +30,33 @@ class ProfileView extends GetView<ProfileController> {
                       SizedBox(
                         height: 20,
                       ),
-                      CircleAvatar(
-                        radius: 50.r,
-                        backgroundImage:
-                            Image.network(controller.profileModel.profileUrl!)
-                                .image,
+                      InkWell(
+                        onTap: () {
+                          controller.updateProfile();
+                        },
+                        child:
+                            GetBuilder<ProfileController>(builder: (context) {
+                          return Stack(
+                            children: [
+                              CircleAvatar(
+                                radius: 50.r,
+                                backgroundImage: controller.file == null
+                                    ? Image.network(
+                                            controller.profileModel.profileUrl!)
+                                        .image
+                                    : Image.file(controller.file!).image,
+                              ),
+                              Positioned(
+                                bottom: 5.h,
+                                right: 10.h,
+                                child: Icon(
+                                  Icons.edit,
+                                  color: AppColors.primaryColor,
+                                ),
+                              )
+                            ],
+                          );
+                        }),
                       ),
                       EditContainer(
                         label: HomeHelper.name,

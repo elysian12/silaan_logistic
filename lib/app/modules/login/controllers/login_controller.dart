@@ -68,7 +68,7 @@ class LoginController extends GetxController {
         if (res != null) {
           isLoading.value = false;
           mobileController.clear();
-          Get.toNamed(Routes.BOTTOM_NAVIGATION);
+          Get.offAllNamed(Routes.BOTTOM_NAVIGATION);
           SharedService().setSharedUUID(userCredential.user!.uid);
           SharedService().setSharedRole(res.role!);
           showSnackBar(context, 'Welcome ${res.name}');

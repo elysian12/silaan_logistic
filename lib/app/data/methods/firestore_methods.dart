@@ -60,6 +60,20 @@ class FireStoreMethods {
     }
   }
 
+  Future<void> updateProfile(String profile) async {
+    try {
+      await _firebaseFirestore
+          .collection('LogisticUsers')
+          .doc(_authMethods.currentUser!.uid)
+          .update(
+        {'profileUrl': profile},
+      );
+    } on FirebaseException catch (e) {
+      log(e.message!);
+      return null;
+    }
+  }
+
   Future<void> updateAvailability(List<Availability> avail) async {
     try {
       await _firebaseFirestore

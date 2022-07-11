@@ -10,7 +10,7 @@ import 'package:silaan_logistic/app/modules/login/bindings/login_binding.dart';
 import 'app/common/constants/theme.dart';
 import 'app/routes/app_pages.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
