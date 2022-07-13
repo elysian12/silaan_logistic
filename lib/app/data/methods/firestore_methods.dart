@@ -141,7 +141,7 @@ class FireStoreMethods {
         );
   }
 
-  Stream<List<OrderModel>> getAllOrders(bool isFemale) {
+  Stream<List<OrderModel>> getAllOrders(bool isFemale, {Status? statusFilter}) {
     if (isFemale) {
       return _firebaseFirestore
           .collection('orders')
@@ -164,30 +164,78 @@ class FireStoreMethods {
         return _orders;
       });
     } else {
-      return _firebaseFirestore
-          .collection('orders')
-          .where(
-            'orderStatus',
-            whereIn: [
-              Status.accepted.name,
-              Status.ready.name,
-            ],
-          )
-          .snapshots()
-          .map((querySnap) {
-            List<OrderModel> _orders = [];
+      if (statusFilter == null) {
+        return _firebaseFirestore
+            .collection('orders')
+            .where(
+              'orderStatus',
+              whereIn: [
+                Status.accepted.name,
+                Status.ready.name,
+              ],
+            )
+            .snapshots()
+            .map((querySnap) {
+              List<OrderModel> _orders = [];
 
-            querySnap.docs.forEach((element) {
-              var temp = OrderModel.fromSnapShot(element);
-              if (temp.rejectionsId.contains(_authMethods.currentUser!.uid)) {
-                return;
-              } else {
-                _orders.add(temp);
-              }
+              querySnap.docs.forEach((element) {
+                var temp = OrderModel.fromSnapShot(element);
+                if (temp.rejectionsId.contains(_authMethods.currentUser!.uid)) {
+                  return;
+                } else {
+                  _orders.add(temp);
+                }
+              });
+
+              return _orders;
             });
+      } else if (statusFilter == Status.accepted) {
+        //pick from customer
+        return _firebaseFirestore
+            .collection('orders')
+            .where(
+              'orderStatus',
+              isEqualTo: Status.accepted.name,
+            )
+            .snapshots()
+            .map((querySnap) {
+          List<OrderModel> _orders = [];
 
-            return _orders;
+          querySnap.docs.forEach((element) {
+            var temp = OrderModel.fromSnapShot(element);
+            if (temp.rejectionsId.contains(_authMethods.currentUser!.uid)) {
+              return;
+            } else {
+              _orders.add(temp);
+            }
           });
+
+          return _orders;
+        });
+      } else {
+        //drop to customer
+        return _firebaseFirestore
+            .collection('orders')
+            .where(
+              'orderStatus',
+              isEqualTo: Status.ready.name,
+            )
+            .snapshots()
+            .map((querySnap) {
+          List<OrderModel> _orders = [];
+
+          querySnap.docs.forEach((element) {
+            var temp = OrderModel.fromSnapShot(element);
+            if (temp.rejectionsId.contains(_authMethods.currentUser!.uid)) {
+              return;
+            } else {
+              _orders.add(temp);
+            }
+          });
+
+          return _orders;
+        });
+      }
     }
   }
 

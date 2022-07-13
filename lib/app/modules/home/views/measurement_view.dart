@@ -17,7 +17,15 @@ class MeasurementView extends StatefulWidget {
 }
 
 class _MeasurementViewState extends State<MeasurementView> {
-  Measurements measurements = Measurements();
+  Measurements measurements = Measurements(
+    armLength: '6.0 inches',
+    backNeckDepth: '6.0 inches',
+    chest: '6.0 inches',
+    comments: 'na',
+    frontNeckDepth: '6.0 inches',
+    shoulderLength: '6.0 inches',
+    upperBodyLength: '6.0 inches',
+  );
   var orderID = Get.arguments;
 
   bool isLoading = false;

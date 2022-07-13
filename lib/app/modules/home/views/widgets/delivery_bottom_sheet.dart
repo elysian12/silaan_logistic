@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:silaan_logistic/app/common/constants/colors.dart';
 import 'package:silaan_logistic/app/modules/helper.dart';
 import 'package:silaan_logistic/app/modules/home/controllers/home_controller.dart';
+import 'package:silaan_logistic/app/modules/home/models/order_model.dart';
 
 class DeliveryBottomSheet extends StatelessWidget {
   const DeliveryBottomSheet({
@@ -19,11 +20,20 @@ class DeliveryBottomSheet extends StatelessWidget {
       color: AppColors.iconColor,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: List.generate(4, (index) {
+        children: List.generate(5, (index) {
           return InkWell(
             onTap: () {
               Get.back();
               final homeController = Get.find<HomeController>();
+              if (index == 1) {
+                homeController.getAllorders(status: Status.accepted);
+              }
+              if (index == 3) {
+                homeController.getAllorders(status: Status.ready);
+              }
+              if (index == 4) {
+                homeController.getAllorders(status: null);
+              }
             },
             child: Column(
               children: [
@@ -37,12 +47,14 @@ class DeliveryBottomSheet extends StatelessWidget {
                           ? HomeHelper.pickCustomer
                           : index == 2
                               ? HomeHelper.dropTailor
-                              : HomeHelper.dropCustomer,
+                              : index == 3
+                                  ? HomeHelper.dropCustomer
+                                  : HomeHelper.none,
                 ),
                 SizedBox(
                   height: 6.h,
                 ),
-                index != 3 ? Divider() : SizedBox(),
+                index != 4 ? Divider() : SizedBox(),
               ],
             ),
           );

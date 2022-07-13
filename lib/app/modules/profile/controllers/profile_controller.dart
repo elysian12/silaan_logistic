@@ -1,14 +1,13 @@
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:silaan_logistic/app/data/methods/firebase_auth_methods.dart';
 import 'package:silaan_logistic/app/data/methods/firebase_storage_methods.dart';
 import 'package:silaan_logistic/app/data/methods/firestore_methods.dart';
 import 'package:silaan_logistic/app/data/models/profile_model.dart';
 import 'package:silaan_logistic/app/data/services/shared_services.dart';
-import 'package:silaan_logistic/app/modules/home/controllers/home_controller.dart';
 import 'package:silaan_logistic/app/routes/app_pages.dart';
 
 class ProfileController extends GetxController {
@@ -42,13 +41,13 @@ class ProfileController extends GetxController {
   //functions
 
   void updateProfile() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-
+    FilePickerResult? pickedFile = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+    );
     if (pickedFile != null) {
-      cropProfilePic(File(pickedFile.path));
+      cropProfilePic(File(pickedFile.files.single.path!));
       var imgUrl = await _methods.uploadProfilePhoto(
-          File(pickedFile.path), _authMethods.currentUser!.uid);
+          File(pickedFile.files.single.path!), _authMethods.currentUser!.uid);
       _fireStoreMethods.updateProfile(imgUrl!);
     }
   }

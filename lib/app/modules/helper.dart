@@ -227,6 +227,7 @@ Needless to say, not all designs could be flawless or you might want to alter so
   static const String pickCustomer = 'Pick Up From Customer';
   static const String dropCustomer = 'Drop To Customer';
   static const String dropTailor = 'Drop To Tailor';
+  static const String none = 'None';
 
   //order view
   static const String orderDetails = 'Order Details';

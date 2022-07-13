@@ -111,14 +111,15 @@ class HomeController extends GetxController {
     await _fireStoreMethods.updateOrderMeasurements(orderId, measurements);
   }
 
-  void getAllorders() async {
+  void getAllorders({Status? status}) async {
     await setRole();
-    _orders.bindStream(_fireStoreMethods.getAllOrders(isFemaleExecutive));
+    _orders.bindStream(_fireStoreMethods.getAllOrders(isFemaleExecutive,
+        statusFilter: status));
   }
 
   @override
   void onInit() {
-    getAllorders();
+    getAllorders(status: null);
     super.onInit();
   }
 
